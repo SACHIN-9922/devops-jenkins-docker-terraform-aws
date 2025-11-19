@@ -1,0 +1,81 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<section class="grid">
+  <div class="card">
+    <h2>Application Status</h2>
+    <p id="status-text" class="status status-ok">Loading...</p>
+    <p><strong>Version:</strong> <span id="app-version">-</span></p>
+    <p><strong>Host:</strong> <span id="host-name">-</span></p>
+  </div>
+
+  <div class="card">
+    <h2>System Metrics (Real-Time)</h2>
+    <p><strong>CPU Usage:</strong> <span id="cpu-value">-</span>%</p>
+    <div class="bar">
+      <div id="cpu-bar" class="bar-fill"></div>
+    </div>
+
+    <p><strong>Memory Usage:</strong> <span id="mem-value">-</span>%</p>
+    <div class="bar">
+      <div id="mem-bar" class="bar-fill"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Runtime Info</h2>
+    <p><strong>Uptime:</strong> <span id="uptime">-</span> seconds</p>
+    <p><strong>Total Requests:</strong> <span id="req-count">-</span></p>
+    <p><strong>Last Updated:</strong> <span id="last-updated">-</span></p>
+  </div>
+</section>
+
+<section class="links">
+  <h2>Useful Endpoints</h2>
+  <ul>
+    <li><a href="/health" target="_blank">/health</a> – Health check</li>
+    <li><a href="/info" target="_blank">/info</a> – App & environment info</li>
+  </ul>
+</section>
+
+<script>
+  async function fetchStatus() {
+    try {
+      const res = await fetch('/api/status');
+      const data = await res.json();
+
+      document.getElementById('cpu-value').textContent = data.cpu_percent;
+      document.getElementById('mem-value').textContent = data.memory_percent;
+      document.getElementById('uptime').textContent = data.uptime_seconds;
+      document.getElementById('req-count').textContent = data.requests;
+      document.getElementById('host-name').textContent = data.host;
+      document.getElementById('app-version').textContent = data.version;
+      document.getElementById('last-updated').textContent = data.time;
+
+      const cpuBar = document.getElementById('cpu-bar');
+      const memBar = document.getElementById('mem-bar');
+
+      cpuBar.style.width = Math.min(data.cpu_percent, 100) + '%';
+      memBar.style.width = Math.min(data.memory_percent, 100) + '%';
+
+      const statusText = document.getElementById('status-text');
+      if (data.cpu_percent < 80 && data.memory_percent < 80) {
+        statusText.textContent = 'Healthy';
+        statusText.className = 'status status-ok';
+      } else {
+        statusText.textContent = 'High Load';
+        statusText.className = 'status status-bad';
+      }
+
+    } catch (err) {
+      const statusText = document.getElementById('status-text');
+      statusText.textContent = 'Error fetching status';
+      statusText.className = 'status status-bad';
+    }
+  }
+
+  fetchStatus();
+  setInterval(fetchStatus, 5000);
+</script>
+
+{% endblock %}
