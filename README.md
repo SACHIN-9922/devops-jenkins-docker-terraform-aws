@@ -60,13 +60,13 @@ This repository contains:
 3. Jenkins Pipeline:
    - Fetches latest code  
    - Builds Docker image  
-   - Pushes to Docker Hub  
+   - (Optional) Pushes image to Docker Hub  
    - Stops old container  
    - Runs new container on EC2  
 4. App instantly updates  
 5. Available at:
 
-👉 **http://<EC2_PUBLIC_IP>:5000**
+👉 **http://\<EC2_PUBLIC_IP\>:5000**
 
 ---
 
@@ -77,12 +77,22 @@ Terraform automatically provisions:
 - VPC + Subnets  
 - Internet Gateway  
 - Route Table  
-- EC2 (Jenkins Server)  
+- EC2 (Jenkins Server + App Deployment)  
 - RDS PostgreSQL  
 - S3 Bucket  
 - IAM Roles & Policies  
 
+### Terraform Commands
 
+```bash
+terraform init
+terraform validate
+terraform plan -out plan.tfplan
+terraform apply "plan.tfplan"
+
+```
+
+---
 
 # 🖥 **6. Real-Time Web Application (Flask)**
 
@@ -115,15 +125,15 @@ The Jenkins pipeline automatically executes:
 
 - Checkout code from GitHub  
 - Build Docker Image  
-- Push to Docker Hub  
+- (Optional) Push image to Docker Hub  
 - Stop old container  
 - Start new container on EC2  
 
 ### Check running containers on EC2
 
 ```bash
-sudo docker ps
-
+docker ps
+```
 
 ---
 
@@ -136,16 +146,13 @@ Follow these steps:
 3. Click **Add Webhook**  
 4. Add this URL:
 
-http://<EC2_PUBLIC_IP>:8080/github-webhook/ 
+```
+http://<EC2_PUBLIC_IP>:8080/github-webhook/
+```
 
-
-
-
-5. Choose → **application/json**  
-6. Select → **Just the push event**  
-7. Click **Add Webhook**
-
-Now every push to GitHub automatically triggers Jenkins.
+5. Content type: **application/json**  
+6. Trigger: **Just the push event**  
+7. Save the webhook
 
 ---
 
@@ -160,7 +167,7 @@ Now every push to GitHub automatically triggers Jenkins.
 ### 3️⃣ Jenkins Dashboard  
 ![Jenkins Dashboard](images/03-jenkins-dashboard.png)
 
-### 4️⃣ Jenkins Console (Docker Build + Deploy)  
+### 4️⃣ Jenkins Console (Docker Build + Deploy Success)  
 ![Jenkins Console](images/04-jenkins-console-success.png)
 
 ### 5️⃣ Docker Container Running  
@@ -176,34 +183,31 @@ Now every push to GitHub automatically triggers Jenkins.
 
 # 🧪 **10. How to Run This Project**
 
-### Clone the repository
+### Clone Repo
 
 ```bash
 git clone https://github.com/SACHIN-9922/devops-jenkins-docker-terraform-aws
+```
 
+### Terraform Deploy
 
-
-Deploy infrastructure using Terraform
+```bash
 cd infra
 terraform init
 terraform apply
+```
 
+### Access Application
 
-Terraform will create:
-
-EC2 (Jenkins)
-
-RDS
-
-VPC + Subnets
-
-S3 bucket
-
-IAM roles
-
-Jenkins Auto Deployment
-
-As soon as you push to GitHub → Jenkins auto-builds & deploys the app via Docker.
-
-Access the Application
+```
 http://<EC2_PUBLIC_IP>:5000
+```
+
+---
+
+<div align="center">
+
+⭐ If you found this project helpful, please give it a **GitHub Star**! ⭐
+
+</div>
+
