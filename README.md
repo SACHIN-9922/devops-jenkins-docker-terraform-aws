@@ -82,17 +82,7 @@ Terraform automatically provisions:
 - S3 Bucket  
 - IAM Roles & Policies  
 
-### Terraform Commands
 
-```bash
-terraform init
-terraform validate
-terraform plan -out plan.tfplan
-terraform apply "plan.tfplan"
-
-
-
----
 
 # 🖥 **6. Real-Time Web Application (Flask)**
 
