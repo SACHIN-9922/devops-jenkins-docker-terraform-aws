@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>DevOps CI/CD Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="header">
+    <h1>DevOps CI/CD Demo Dashboard</h1>
+    <p>Jenkins • Docker • Terraform • AWS</p>
+  </header>
+
+  <main class="container">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="footer">
+    <p>Built by Sachin Singh · Automated with Jenkins & Terraform</p>
+  </footer>
+</body>
+</html>
